@@ -1,0 +1,9 @@
+Flask
+torch
+torchvision
+Pillow
+requests
+numpy
+scipy
+gunicorn
+flask-cors
