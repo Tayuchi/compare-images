@@ -5,4 +5,5 @@ Pillow
 requests
 numpy
 scipy
+gunicorn
 flask-cors
