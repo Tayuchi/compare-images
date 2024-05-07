@@ -14,7 +14,8 @@ model = models.resnet50(weights=models.ResNet50_Weights.DEFAULT)
 model.eval()  # 推論モード
 
 app = Flask(__name__)
-CORS(app)
+# localhost:3000 からのリクエストのみ許可
+CORS(app, resources={r"/compare-images": {"origins": "http://localhost:3000"}})
 
 # 画像の前処理
 preprocess = transforms.Compose([
@@ -39,9 +40,9 @@ def get_vector(image_data):
 
 @app.after_request
 def after_request(response):
-    response.headers.add('Access-Control-Allow-Origin', '*')
-    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
-    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+    response.headers['Access-Control-Allow-Origin'] = 'http://localhost:3000'
+    response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization'
+    response.headers['Access-Control-Allow-Methods'] = 'GET,PUT,POST,DELETE,OPTIONS'
     return response
 
 @app.route('/compare-images', methods=['POST'])
