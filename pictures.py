@@ -15,7 +15,7 @@ model.eval()  # 推論モード
 
 app = Flask(__name__)
 # localhost:3000 からのリクエストのみ許可
-CORS(app, resources={r"/compare-images": {"origins": "http://localhost:3000/compare"}})
+CORS(app, resources={r"/compare-images": {"origins": "http://localhost:3000"}})
 
 # 画像の前処理
 preprocess = transforms.Compose([
