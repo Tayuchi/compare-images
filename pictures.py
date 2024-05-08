@@ -15,7 +15,7 @@ model.eval()  # 推論モード
 
 app = Flask(__name__)
 # localhost:3000 からのリクエストのみ許可
-CORS(app, resources={r"/compare": {"origins": "http://localhost:3000"}})
+CORS(app, resources={r"/compare-images": {"origins": "http://localhost:3000/compare"}})
 
 # 画像の前処理
 preprocess = transforms.Compose([
@@ -40,12 +40,12 @@ def get_vector(image_data):
 
 @app.after_request
 def after_request(response):
-    response.headers['Access-Control-Allow-Origin'] = 'http://localhost:3000'
+    response.headers['Access-Control-Allow-Origin'] = 'http://localhost:3000/compare'
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization'
     response.headers['Access-Control-Allow-Methods'] = 'GET,PUT,POST,DELETE,OPTIONS'
     return response
 
-@app.route('/compare', methods=['POST'])
+@app.route('/compare-images', methods=['POST'])
 def compare_images():
     data = request.get_json()
     if not data or 'image_url1' not in data or 'image_url2' not in data:
