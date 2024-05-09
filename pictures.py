@@ -14,8 +14,8 @@ model = models.resnet50(weights=models.ResNet50_Weights.DEFAULT)
 model.eval()  # 推論モード
 
 app = Flask(__name__)
-# localhost:3000 からのリクエストのみ許可
-CORS(app, resources={r"/compare-images": {"origins": "http://localhost:3000"}})
+# photopickle からのリクエストのみ許可
+CORS(app, resources={r"/compare-images": {"origins": "https://photo-pickle.vercel.app/"}})
 
 # 画像の前処理
 preprocess = transforms.Compose([
@@ -40,7 +40,7 @@ def get_vector(image_data):
 
 @app.after_request
 def after_request(response):
-    response.headers['Access-Control-Allow-Origin'] = 'http://localhost:3000'
+    response.headers['Access-Control-Allow-Origin'] = 'https://photo-pickle.vercel.app/'
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization'
     response.headers['Access-Control-Allow-Methods'] = 'GET,PUT,POST,DELETE,OPTIONS'
     return response
