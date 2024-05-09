@@ -40,7 +40,7 @@ def get_vector(image_data):
 
 @app.after_request
 def after_request(response):
-    response.headers['Access-Control-Allow-Origin'] = 'https://photo-pickle.vercel.app/'
+    response.headers['Access-Control-Allow-Origin'] = 'https://photo-pickle.vercel.app/compare'
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization'
     response.headers['Access-Control-Allow-Methods'] = 'GET,PUT,POST,DELETE,OPTIONS'
     return response
