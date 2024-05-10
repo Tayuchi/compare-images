@@ -14,8 +14,8 @@ model = models.resnet50(weights=models.ResNet50_Weights.DEFAULT)
 model.eval()  # 推論モード
 
 app = Flask(__name__)
-# photopickle からのリクエストのみ許可
-CORS(app)
+# 必要なオリジンのみ許可
+CORS(app, resources={r"/compare-images": {"origins": ["'https://photo-pickle.vercel.app/compare-images'"]}})
 
 # 画像の前処理
 preprocess = transforms.Compose([
@@ -75,4 +75,4 @@ def compare_images():
     return jsonify({"similarity_score": round(dist, 2)})
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port="8080", debug=True)
+    app.run(host="0.0.0.0", port=8080, debug=True)
