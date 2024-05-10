@@ -59,13 +59,14 @@ def compare_images():
     except requests.exceptions.RequestException:
         return jsonify({"error": "Failed to download image_url1."}), 500
 
+    
+    return jsonify({"test": "working!"})
     try:
         base64_encoded_data = data['image_url2'].split(',')[1]
         image_data2 = base64.b64decode(base64_encoded_data)
     except Exception:
         return jsonify({"error": "Failed to decode or process image_url2."}), 400
-
-    return jsonify({"test": "working!"})
+        
     try:
         img_vec1 = get_vector(BytesIO(image_data1))
         img_vec2 = get_vector(BytesIO(image_data2))
