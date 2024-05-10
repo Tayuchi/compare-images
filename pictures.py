@@ -6,7 +6,7 @@ from PIL import Image
 import requests
 from io import BytesIO
 from scipy.spatial import distance
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 import base64
 import logging
 from logging.handlers import RotatingFileHandler
@@ -24,7 +24,7 @@ model = models.resnet50(weights=models.ResNet50_Weights.DEFAULT)
 model.eval()  # 推論モード
 
 app = Flask(__name__)
-CORS(app, resources={r"/compare-images": {"origins": ["https://photo-pickle.vercel.app"]}})
+CORS(app, resources={r"/compare-images": {"origins": "https://photo-pickle.vercel.app"}})
 
 # 画像の前処理
 preprocess = transforms.Compose([
@@ -34,8 +34,9 @@ preprocess = transforms.Compose([
     transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
 ])
 
+# 画像データから特徴ベクトルを取得する関数
 def get_vector(image_data):
-    img = Image.open(image_data)
+    img = Image.open(BytesIO(image_data))
     if img.mode != 'RGB':
         img = img.convert('RGB')
     img_t = preprocess(img)
@@ -44,14 +45,8 @@ def get_vector(image_data):
         features = model(batch_t)
     return features.numpy().flatten()
 
-@app.after_request
-def after_request(response):
-    response.headers.add('Access-Control-Allow-Origin', '*')
-    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
-    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
-    return response
-
 @app.route('/compare-images', methods=['POST'])
+@cross_origin(origin='https://photo-pickle.vercel.app', headers=['Content-Type', 'Authorization'])
 def compare_images():
     data = request.get_json()
     if not data or 'image_url1' not in data or 'image_url2' not in data:
