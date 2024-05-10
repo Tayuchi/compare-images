@@ -15,7 +15,7 @@ model.eval()  # 推論モード
 
 app = Flask(__name__)
 # 必要なオリジンのみ許可
-CORS(app, resources={r"/compare-images": {"origins": ["'https://photo-pickle.vercel.app/compare-images'"]}})
+CORS(app, resources={r"/compare-images": {"origins": ["'https://photo-pickle.vercel.app/compare'"]}})
 
 # 画像の前処理
 preprocess = transforms.Compose([
