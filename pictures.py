@@ -71,6 +71,7 @@ def compare_images():
     except Exception:
         return jsonify({"error": "Failed to process images."}), 500
 
+    return jsonify({"test": "working!"})
     dist = distance.euclidean(img_vec1, img_vec2)
     return jsonify({"similarity_score": round(dist, 2)})
 
