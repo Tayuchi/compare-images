@@ -24,7 +24,7 @@ model = models.resnet50(weights=models.ResNet50_Weights.DEFAULT)
 model.eval()  # 推論モード
 
 app = Flask(__name__)
-CORS(app, resources={r"/compare-images": {"origins": ["https://photo-pickle.vercel.app/compare"]}})
+CORS(app, resources={r"/compare-images": {"origins": ["https://photo-pickle.vercel.app"]}})
 
 # 画像の前処理
 preprocess = transforms.Compose([
