@@ -61,8 +61,8 @@ def compare_images():
 
     try:
         base64_encoded_data = data['image_url2'].split(',')[1]
-        return jsonify({"test": "working!"})
         image_data2 = base64.b64decode(base64_encoded_data)
+        return jsonify({"test": "working!"})
     except Exception:
         return jsonify({"error": "Failed to decode or process image_url2."}), 400
         
