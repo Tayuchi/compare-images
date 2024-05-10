@@ -35,19 +35,23 @@ preprocess = transforms.Compose([
 ])
 
 def get_vector(image_data):
-    # Check if image_data is bytes, then create BytesIO object
-    if isinstance(image_data, bytes):
-        img = Image.open(BytesIO(image_data))
-    else:
-        img = Image.open(image_data)
+    # image_data should be a bytes object directly
+    try:
+        # Ensure we are using BytesIO correctly
+        if not isinstance(image_data, bytes):
+            raise TypeError("Expected image_data to be bytes but got {}".format(type(image_data).__name__))
 
-    if img.mode != 'RGB':
-        img = img.convert('RGB')
-    img_t = preprocess(img)
-    batch_t = torch.unsqueeze(img_t, 0)
-    with torch.no_grad():
-        features = model(batch_t)
-    return features.numpy().flatten()
+        img = Image.open(BytesIO(image_data))
+        if img.mode != 'RGB':
+            img = img.convert('RGB')
+        img_t = preprocess(img)
+        batch_t = torch.unsqueeze(img_t, 0)
+        with torch.no_grad():
+            features = model(batch_t)
+        return features.numpy().flatten()
+    except Exception as e:
+        logger.error(f"Error processing the image data: {e}")
+        raise
 
 @app.route('/compare-images', methods=['POST'])
 def compare_images():
