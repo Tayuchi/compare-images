@@ -36,7 +36,13 @@ preprocess = transforms.Compose([
 
 # 画像データから特徴ベクトルを取得する関数
 def get_vector(image_data):
-    img = Image.open(BytesIO(image_data))
+    # image_data が bytes であれば、BytesIO を作成
+    if isinstance(image_data, bytes):
+        img = Image.open(BytesIO(image_data))
+    else:
+        # すでに BytesIO オブジェクトの場合はそのまま使う
+        img = Image.open(image_data)
+
     if img.mode != 'RGB':
         img = img.convert('RGB')
     img_t = preprocess(img)
