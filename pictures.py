@@ -64,19 +64,25 @@ preprocess = transforms.Compose([
 
 # 画像データから特徴ベクトルを取得する関数
 def get_vector(image_data):
+    logger.info("get_vector: start get_vector")
     # image_data が bytes であれば、BytesIO を作成
     if isinstance(image_data, bytes):
         img = Image.open(BytesIO(image_data))
     else:
         # すでに BytesIO オブジェクトの場合はそのまま使う
         img = Image.open(image_data)
+    logger.info("get_vector: opend image")
 
     if img.mode != 'RGB':
         img = img.convert('RGB')
+    logger.info("get_vector: converted color mode")
     img_t = preprocess(img)
+    logger.info("get_vector: success preprocess")
     batch_t = torch.unsqueeze(img_t, 0)
+    logger.info("get_vector: success unsqueeze")
     with torch.no_grad():
         features = model(batch_t)
+    logger.info("get_vector: end get_vector")
     return features.numpy().flatten()
 
 @app.route('/compare-images', methods=['POST'])
