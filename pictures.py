@@ -64,19 +64,25 @@ preprocess = transforms.Compose([
 
 # 画像データから特徴ベクトルを取得する関数
 def get_vector(image_data):
+    logger.info("get_vector: start get_vector")
     # image_data が bytes であれば、BytesIO を作成
     if isinstance(image_data, bytes):
         img = Image.open(BytesIO(image_data))
     else:
         # すでに BytesIO オブジェクトの場合はそのまま使う
         img = Image.open(image_data)
+    logger.info("get_vector: opend image")
 
     if img.mode != 'RGB':
         img = img.convert('RGB')
+    logger.info("get_vector: converted color mode")
     img_t = preprocess(img)
+    logger.info("get_vector: success preprocess")
     batch_t = torch.unsqueeze(img_t, 0)
+    logger.info("get_vector: success unsqueeze")
     with torch.no_grad():
         features = model(batch_t)
+    logger.info("get_vector: end get_vector")
     return features.numpy().flatten()
 
 @app.route('/compare-images', methods=['POST'])
@@ -108,8 +114,16 @@ def compare_images():
     logger.info("Completed decoding and process image_url2!")
 
     try:
-        img_vec1 = get_vector(BytesIO(image_data1))
-        img_vec2 = get_vector(BytesIO(image_data2))
+        # 祈り: うまく動いてくれ！！
+        logger.info("pray 0");
+        img_bytes1 = BytesIO(image_data1)
+        logger.info("pray 1");
+        img_bytes2 = BytesIO(image_data2)
+        logger.info("pray 2");
+        img_vec1 = get_vector(img_bytes1)
+        logger.info("pray 3");
+        img_vec2 = get_vector(img_bytes2)
+        logger.info("pray 4");
     except Exception as e:
         logger.error(f"Failed to process images: {str(e)}")
         return jsonify({"error": f"Failed to process images: {str(e)}"}), 500
