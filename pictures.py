@@ -85,6 +85,7 @@ def compare_images():
     if not data or 'image_url1' not in data or 'image_url2' not in data:
         logger.error("Both image URLs are required.")
         return jsonify({"error": "Both image URLs are required."}), 400
+    logger.info("Completed checking the recieve data structure!")
 
     image_url1 = data['image_url1']
     try:
@@ -94,6 +95,7 @@ def compare_images():
     except requests.exceptions.RequestException as e:
         logger.error(f"Failed to download image_url1: {str(e)}")
         return jsonify({"error": f"Failed to download image_url1: {str(e)}"}), 500
+    logger.info("Completed downloading image_url1!")
 
     image_url2 = data['image_url2']
     try:
@@ -102,6 +104,7 @@ def compare_images():
     except Exception as e:
         logger.error(f"Failed to decode or process image_url2: {str(e)}")
         return jsonify({"error": f"Failed to decode or process image_url2: {str(e)}"}), 400
+    logger.info("Completed decoding and process image_url2!")
 
     try:
         img_vec1 = get_vector(BytesIO(image_data1))
@@ -109,8 +112,10 @@ def compare_images():
     except Exception as e:
         logger.error(f"Failed to process images: {str(e)}")
         return jsonify({"error": f"Failed to process images: {str(e)}"}), 500
+    logger.info("Completed processing images!")
 
     dist = distance.euclidean(img_vec1, img_vec2)
+    logger.info("Completed calcuating similarity!")
     return jsonify({"similarity_score": round(dist, 2)})
 
 @app.route('/logs')
