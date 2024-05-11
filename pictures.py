@@ -1,3 +1,4 @@
+# app.py
 #
 #                       _oo0oo_
 #                      o8888888o
@@ -24,7 +25,6 @@
 #               佛祖保佑         永无BUG
 #
 #
-#
 from flask import Flask, request, jsonify, send_file
 import torch
 import torchvision.models as models
@@ -37,6 +37,7 @@ from flask_cors import CORS, cross_origin
 import base64
 import logging
 from logging.handlers import RotatingFileHandler
+import os
 
 # ロギングの設定
 logger = logging.getLogger(__name__)
@@ -51,7 +52,7 @@ model = models.resnet50(weights=models.ResNet50_Weights.DEFAULT)
 model.eval()  # 推論モード
 
 app = Flask(__name__)
-CORS(app, resources={r"/compare-images": {"origins": "https://photo-pickle.vercel.app"}})
+CORS(app, resources={r"/compare-images": {"origins": "*"}})
 
 # 画像の前処理
 preprocess = transforms.Compose([
@@ -79,7 +80,7 @@ def get_vector(image_data):
     return features.numpy().flatten()
 
 @app.route('/compare-images', methods=['POST'])
-@cross_origin(origin='https://photo-pickle.vercel.app', headers=['Content-Type', 'Authorization'])
+@cross_origin(origin='*', headers=['Content-Type', 'Authorization'])
 def compare_images():
     data = request.get_json()
     if not data or 'image_url1' not in data or 'image_url2' not in data:
@@ -122,4 +123,5 @@ def logs():
         return str(e), 500
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=8080, debug=True)
+    port = int(os.environ.get("PORT", 8080))
+    app.run(host="0.0.0.0", port=port, debug=True)
