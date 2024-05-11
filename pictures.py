@@ -88,6 +88,7 @@ def get_vector(image_data):
 @app.route('/compare-images', methods=['POST'])
 @cross_origin(origin='*', headers=['Content-Type', 'Authorization'])
 def compare_images():
+    logger.info("tanosii proguramingu") # デプロイできてるか心配なので適当な直を毎回入れてます
     data = request.get_json()
     if not data or 'image_url1' not in data or 'image_url2' not in data:
         logger.error("Both image URLs are required.")
