@@ -114,8 +114,16 @@ def compare_images():
     logger.info("Completed decoding and process image_url2!")
 
     try:
-        img_vec1 = get_vector(BytesIO(image_data1))
-        img_vec2 = get_vector(BytesIO(image_data2))
+        # 祈り: うまく動いてくれ！！
+        logger.info("pray 0");
+        img_bytes1 = BytesIO(image_data1)
+        logger.info("pray 1");
+        img_bytes2 = BytesIO(image_data2)
+        logger.info("pray 2");
+        img_vec1 = get_vector(img_bytes1)
+        logger.info("pray 3");
+        img_vec2 = get_vector(img_bytes2)
+        logger.info("pray 4");
     except Exception as e:
         logger.error(f"Failed to process images: {str(e)}")
         return jsonify({"error": f"Failed to process images: {str(e)}"}), 500
